@@ -25,14 +25,6 @@ def button_click(event):
     elif num == "+/-":
         num *= -1
 
-        
-    
-    #elif num  == ".":
-        #count= btn["text"].count('.')
-        #if count<2:
-            #entry.insert(tk.END,res)
-            #entry.delete(0,tk.END)
-
     else: # 「=」以外のボタン字
         #tkm.showinfo("", f"{num}ボタンがクリックされました")
         # 練習６
