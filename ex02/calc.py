@@ -4,7 +4,7 @@ import math
 
 # 練習３
 def enter_bg(event):
-    event.widget['bg']= '#CCFFFF'
+    event.widget['bg']= '#CCFFFF' #色変え
 
 
 def leave_bg(event):
@@ -14,12 +14,13 @@ def leave_bg(event):
 def button_click(event):
     btn = event.widget
     num = btn["text"]
+
     if num == "=":
         siki=entry.get()
         res=eval(siki)
         entry.delete(0,tk.END)
         entry.insert(tk.END,res)
-    elif num == "c":
+    elif num == "c": #全消し
         entry.delete(0,tk.END)
     elif num == "+/-":
         num *= -1
