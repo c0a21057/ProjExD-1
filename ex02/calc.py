@@ -7,7 +7,7 @@ def enter_bg(event):
     event.widget['bg']= '#CCFFFF' #色変え
 
 
-def leave_bg(event):
+def leave_bg(event):#マウスが離れたときに元の色に戻る
     event.widget['bg']= 'SystemButtonFace'
 
 
