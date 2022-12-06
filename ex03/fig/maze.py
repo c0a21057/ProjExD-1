@@ -32,13 +32,13 @@ if __name__ == "__main__":
     canvas = tk.Canvas(root, width=1500, height=900, bg="black")
     canvas.pack()
     maze_lst = mm.make_maze(15, 9)
-    # print(maze_lst)
+    
     mm.show_maze(canvas, maze_lst)
 
     mx,my= 1,1
     cx, cy = mx*100+50,my*100+50
 
-    tori = tk.PhotoImage(file="ex03/fig/8.png")
+    tori = tk.PhotoImage(file="ex03/fig/1.png")
     canvas.create_image(cx, cy, image=tori, tag="kokaton") 
     key = ""
     root.bind("<KeyPress>", key_down)
