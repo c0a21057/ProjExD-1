@@ -8,4 +8,5 @@ if __name__ == "__main__":
     cx,cy=300,400
     tori = image=tk.PhotoImage(file="ex03/fig/8.png")
     canvas.create_image(cx,cy,image=tori,tag="kokaton")
+    key=""
     root.mainloop()
