@@ -48,7 +48,7 @@ def main():
     bomb_rct2.centerx = random.randint(0, scrn_rct.width)
     bomb_rct2.centery = random.randint(0, scrn_rct.height)
     scrn_sfc.blit(bomb_sfc2, bomb_rct2) 
-    ax, ay = -1, -1
+    ax, ay = -5 , -5
 
 
 
@@ -62,7 +62,7 @@ def main():
                 return
 
         # 練習4
-        key_dct = pg.key.get_pressed() # 辞書型
+        key_dct = pg.key.get_pressed() 
         if key_dct[pg.K_UP]:
             if tori_rct.colliderect(bomb_rct) or tori_rct.colliderect(bomb_rct2): #爆弾に当たったら
                 tori_rct.centery -= 0 #こうかとんが動かない
