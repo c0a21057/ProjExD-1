@@ -41,6 +41,15 @@ def main():
     scrn_sfc.blit(bomb_sfc, bomb_rct) 
     vx, vy = +1, +1
 
+    bomb_sfc2 = pg.Surface((20, 20)) # 2つめの爆弾
+    bomb_sfc2.set_colorkey((0, 0, 0))
+    pg.draw.circle(bomb_sfc2, (0, 0, 255), (10, 10), 10)
+    bomb_rct2 = bomb_sfc2.get_rect()
+    bomb_rct2.centerx = random.randint(0, scrn_rct.width)
+    bomb_rct2.centery = random.randint(0, scrn_rct.height)
+    scrn_sfc.blit(bomb_sfc2, bomb_rct2) 
+    ax, ay = -1, -1
+
 
 
     # 練習２
@@ -55,22 +64,22 @@ def main():
         # 練習4
         key_dct = pg.key.get_pressed() # 辞書型
         if key_dct[pg.K_UP]:
-            if tori_rct.colliderect(bomb_rct): #爆弾に当たったら
+            if tori_rct.colliderect(bomb_rct) or tori_rct.colliderect(bomb_rct2): #爆弾に当たったら
                 tori_rct.centery -= 0 #こうかとんが動かない
             else:
                 tori_rct.centery -= 1
         if key_dct[pg.K_DOWN]:
-            if tori_rct.colliderect(bomb_rct): #爆弾に当たったら
+            if tori_rct.colliderect(bomb_rct) or tori_rct.colliderect(bomb_rct2): #爆弾に当たったら
                 tori_rct.centery += 0  #こうかとんが動かない
             else:
                 tori_rct.centery += 1
         if key_dct[pg.K_LEFT]:
-            if tori_rct.colliderect(bomb_rct): #爆弾に当たったら
+            if tori_rct.colliderect(bomb_rct) or tori_rct.colliderect(bomb_rct2): #爆弾に当たったら
                 tori_rct.centerx -= 0  #こうかとんが動かない
             else:
                 tori_rct.centerx -= 1
         if key_dct[pg.K_RIGHT]:
-            if tori_rct.colliderect(bomb_rct): #爆弾に当たったら
+            if tori_rct.colliderect(bomb_rct) or tori_rct.colliderect(bomb_rct2): #爆弾に当たったら
                 tori_rct.centerx += 0  #こうかとんが動かない
             else:
                 tori_rct.centerx += 1
@@ -93,11 +102,20 @@ def main():
         vx *= yoko
         vy *= tate
 
+        bomb_rct2.move_ip(ax, ay) #2つ目の爆弾の動き
+        scrn_sfc.blit(bomb_sfc2, bomb_rct2) 
+        yoko, tate = check_bound(bomb_rct2, scrn_rct)
+        ax *= yoko
+        ay *= tate
+
 
         # 練習８
-        if tori_rct.colliderect(bomb_rct):
-            vx *= 0 #爆弾の動きとめる
+        if tori_rct.colliderect(bomb_rct) :
+            vx *= 0 #赤い爆弾の動きとめる
             vy *= 0
+        if tori_rct.colliderect(bomb_rct2) :
+            ax *= 0 #青い爆弾の動きとめる
+            ay *= 0
   
 
 
