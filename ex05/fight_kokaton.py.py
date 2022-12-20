@@ -15,11 +15,13 @@ class Screen:
         self.sfc.blit(self.bgi_sfc, self.bgi_rct) 
 
 
-class Shot:
+class Shot: #こうかとんの攻撃手段　（動かない）
+
+    key_shot = {pg.K_SPACE}
     def __init__(self, color, rad, vxy, scr:Screen):
         self.sfc = pg.Surface((2*rad, 2*rad)) # 正方形の空のSurface
         self.sfc.set_colorkey((0, 0, 0))
-        pg.draw.circle(self.sfc, (100,100,100), (rad, rad), rad)
+        pg.draw.circle(self.sfc, (100,100,100), (rad, rad), rad) #(100,100,100)色の丸を描画
         self.rct = self.sfc.get_rect()
         self.rct.centerx = random.randint(0, scr.rct.width)
         self.rct.centery = random.randint(0, scr.rct.height)
@@ -103,7 +105,7 @@ def main():
     clock =pg.time.Clock()
 
     # 練習１
-    scr = Screen("逃げろ！こうかとん", (1600,900), "fig/pg_bg.jpg")
+    scr = Screen("負けるな！こうかとん", (1600,900), "fig/pg_bg.jpg")
 
     # 練習３
     kkt = Bird("fig/6.png", 2.0, (900,400))
@@ -127,8 +129,8 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
-            if event.type == pg.K_SPACE:
-                return
+
+                
             
 
         kkt.update(scr)
