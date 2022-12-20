@@ -3,8 +3,6 @@ import random
 import sys
 import time 
 
-30*(cos(sqrt(x*x+z*z))*(M_PI/180)+cos(sqrt(x*x+z*z))*3*(M_PI/180))
-			double y = 30*(cos(sqrt(x*x+z*z)*deg)+cos(3*sqrt(x*x+z*z)*deg));
 def check_bound(obj_rct, scr_rct):
     yoko, tate = +1, +1
     if obj_rct.left < scr_rct.left or scr_rct.right < obj_rct.right:

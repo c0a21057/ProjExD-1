@@ -15,6 +15,26 @@ class Screen:
         self.sfc.blit(self.bgi_sfc, self.bgi_rct) 
 
 
+class Shot:
+    def __init__(self, color, rad, vxy, scr:Screen):
+        self.sfc = pg.Surface((2*rad, 2*rad)) # 正方形の空のSurface
+        self.sfc.set_colorkey((0, 0, 0))
+        pg.draw.circle(self.sfc, (100,100,100), (rad, rad), rad)
+        self.rct = self.sfc.get_rect()
+        self.rct.centerx = random.randint(0, scr.rct.width)
+        self.rct.centery = random.randint(0, scr.rct.height)
+        self.vx, self.vy = vxy
+
+    def blit(self, scr:Screen):
+        scr.sfc.blit(self.sfc, self.rct)
+
+    def update(self, scr:Screen):
+        self.rct.move_ip(self.vx, self.vy)
+        yoko, tate = check_bound(self.rct, scr.rct)
+        self.vx *= yoko
+        self.vy *= tate
+        self.blit(scr) 
+
 class Bird:
     key_delta = {
         pg.K_UP:    [0, -1],
@@ -91,8 +111,8 @@ def main():
 
     # 練習５
     bombs = []
-    colors=["red", "green", "blue", "yellow", "magenta"]
-    for i in range(5):
+    colors=["red", "green", "blue", "yellow", "magenta","greenyellow"] #爆弾を6個にする
+    for i in range(6):
         color = colors[i]
         vx = random.choice([-1,+1])
         vy = random.choice([-1,+1])
@@ -107,6 +127,9 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
+            if event.type == pg.K_SPACE:
+                return
+            
 
         kkt.update(scr)
         for bomb in bombs:
