@@ -3,97 +3,7 @@ import sys
 import random,time
 import pygame as pg
 import maze_maker as mm
-""""
-WALL_COLOR = (87, 45, 24) #迷路　棒倒し法
-FLOOR_COLOR = (181, 152, 132)
 
-# 床1枚の幅と高さ
-FLOOR_W = 60
-FLOOR_H = 60
-# 迷路の幅と高さ（床の枚数）
-MAZE_W = 20
-MAZE_H = 15
-# リストの宣言と初期化
-maze = []
-for y in range(MAZE_H):
-    maze.append([0] * MAZE_W)
-
-# 迷路の設計情報を自動生成する
-def make_maze():
-    # 柱から伸ばす壁のに利用する値を定義
-    # [上, 右, 下, 左]
-    XP = [0, 1, 0, -1]
-    YP = [-1, 0, 1, 0]
-
-    # 迷路を囲う壁を作る
-    for x in range(MAZE_W):
-        maze[0][x] = 1
-        maze[MAZE_H - 1][x] = 1
-    for y in range(1, MAZE_H - 1):
-        maze[y][0] = 1
-        maze[y][MAZE_W - 1] = 1
-    
-    # 中を何もない状態にする
-    for y in range(1, MAZE_H - 1):
-        for x in range(1, MAZE_W - 1):
-            maze[y][x] = 0
-    
-    # 柱を作る
-    for y in range(2, MAZE_H - 2, 2):           # range()は第三引数を2を指定し、ステップ機能で1マス飛ばししている
-        for x in range(2, MAZE_W - 2, 2):
-            maze[y][x] = 1
-    
-    # 各柱から壁を伸ばす
-    for y in range(2, MAZE_H - 2, 2):
-        for x in range(2, MAZE_W - 2, 2):
-            while True:
-                d = random.randint(0, 3)            # 変数dに柱から伸ばす方向を0~3で指定
-                if x > 2:                           # 2列目以降なら0~2（左を示す3を含めない）で左に伸ばさない
-                    d = random.randint(0, 2)
-                
-                if maze[y + YP[d]][x + XP[d]] == 1: # dの値が既に壁が作られた場所であればやり直し
-                    continue
-
-                # 柱から伸ばす壁を示す値（変数d）を、定数YP、XPの添字に使い壁を伸ばすマス目を指定
-                # そのマス目を表すmaze[]に壁有りを示す1を代入
-                maze[y + YP[d]][x + XP[d]] = 1
-                break
-
-def main():
-    pygame.init()
-    pygame.display.set_caption("いもむしマン")
-    screen = pygame.display.set_mode((FLOOR_W * MAZE_W, FLOOR_H * MAZE_H))
-    clock = pygame.time.Clock()
-
-    make_maze()
-
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    make_maze()
-        
-        # 自動生成した迷路の設計情報を使い実際に描画する
-        for y in range(MAZE_H):
-            for x in range(MAZE_W):
-                W = FLOOR_W
-                H = FLOOR_H
-                X = x * W
-                Y = y * H
-                # 通路を描画
-                if maze[y][x] == 0:
-                    pygame.draw.rect(screen, FLOOR_COLOR, [X, Y, W, H])
-                # 壁を描画
-                if maze[y][x] == 1:
-                    pygame.draw.rect(screen, WALL_COLOR, [X, Y, W, H])
-        
-        pygame.display.update()
-        clock.tick(2)
-"""
 
 class Screen:
     def __init__(self, title, wh, img_path):
@@ -118,8 +28,20 @@ class Maze:
 
     def blit(self,scr:Screen):
         scr.sfc.blit(self.sfc,self.rct)
-                
+
+def check_bound(obj_rct, scr_rct):
+    # 第1引数；敵rect
+    # 第2引数：スクリーンrect
+    # 範囲内：+1/範囲外：-1
+    yoko, tate = +1, +1
+    if obj_rct.left < scr_rct.left or scr_rct.right < obj_rct.right:
+        yoko = -1
+    if obj_rct.top < scr_rct.top or scr_rct.bottom < obj_rct.bottom:
+        tate = -1
+    return yoko, tate
+
 def main2():
+    clock = pg.time.Clock()
     scr = Screen("食べろにょろにょろ", (1600,900), "fig/pg_bg.jpg")
 
     make_lst=mm.make_maze(18,18) #マスの数
@@ -128,6 +50,7 @@ def main2():
 
     color_red = pg.Color(255, 0, 0)
     color_green = pg.Color(0, 255, 0)
+    color_yello = pg.Color(255, 212, 0)
     screen = pg.display.set_mode((900, 1000)) #スクリーンの大きさ
     pg.display.set_caption("蛇")
     arr = [([0] * 41) for i in range(61)]  
@@ -139,9 +62,34 @@ def main2():
     snake_lon = 3  # 蛇の長さ
     way = 1  # 蛇の運動方向
 
+    tekix = random.randint(1, 60)  # 敵のx座標
+    tekiy = random.randint(1, 40)  # 敵のy座標
+    arr[tekix][tekiy] = -2
+
+    teki_sfc = pg.Surface((10, 10)) # 正方形の空のSurface
+    pg.draw.rect(teki_sfc, color_yello, (0, 0, 10, 10))
+    teki_rct = teki_sfc.get_rect()
+    teki_rct.centerx = tekix*10
+    teki_rct.centery = tekiy*10
+
+    xy = [+3,-3, 0]        #敵の移動と方向    
+    vx = random.choice(xy)
+    vy = random.choice(xy)
+
+    font = pg.font.Font(None, 30) #スコアの文字列
+    scor = 0 #スコアの初期値
+
+    st = time.time()
+
+
     while True:
         scr.blit()
         maze.blit(scr)
+
+        text = font.render(f"Score {scor}", True, (0,0,0))   # 描画する文字列の設定
+        scr.sfc.blit(text, [20, 1])# 文字列の表示位置
+        ed = time.time()
+        gt = ed-st
         
         #screen.fill(color_white)
         time.sleep(0.1)
@@ -166,7 +114,11 @@ def main2():
         if way == 4:
             y += 1
         if (x > 60) or (y > 40) or (x < 1) or (y < 1) or (arr[x][y] > 0):  # 死亡(壁、自分の体をぶつかったら)
-            sys.exit()
+            font1 = pg.font.Font(None, 100) 
+            text1 = font1.render("Game Over!", True, color_red)
+            text2 = font1.render(f"Score {scor}", True, color_red)   # 描画する文字列の設定
+            scr.sfc.blit(text1, [100, 100])# 文字列の表示位置
+            scr.sfc.blit(text2, [150, 200])
         arr[x][y] = snake_lon
         for a, b in enumerate(arr, 1):
             for c, d in enumerate(b, 1):
@@ -175,17 +127,38 @@ def main2():
                     # print(a,c) #蛇の座標を表示
                     arr[a - 1][c - 1] = arr[a - 1][c - 1] - 1
                     pg.draw.rect(screen, color_green, ((a - 1) * 10, (c - 1) * 10, 10, 10))
-                if (d < 0):
-                    pg.draw.rect(screen, color_red, ((a - 1) * 10, (c - 1) * 10, 10, 10))
-        if (x == foodx) and (y == foody):   #蛇が食べ物を食べったら
-            snake_lon += 1    #長さ+1
-            while (arr[foodx][foody] != 0):    #新しい食べ物を表示
-                foodx = random.randint(1, 60)
-                foody = random.randint(1, 40)
-            arr[foodx][foody] = -1
+                if (d == -1):
+                    pg.draw.rect(scr.sfc, color_red, ((a - 1) * 10, (c - 1) * 10, 10, 10))
+                if (d == -2):
+                    teki_rct.move_ip(vx, vy)
+                    scr.sfc.blit(teki_sfc, teki_rct)
+                    yoko,tate = check_bound(teki_rct, scr.rct)
+                    vx *= yoko
+                    vy *= tate
+
+        if (x == tekix*10) and (y == tekiy*10): #敵をぶつかったら、ゲームオーバー
+            font1 = pg.font.Font(None, 100) 
+            text1 = font1.render("Game Over!", True, color_red)
+            text2 = font1.render(f"Score {scor}", True, color_red)   # 描画する文字列の設定
+            scr.sfc.blit(text1, [100, 100])# 文字列の表示位置
+            scr.sfc.blit(text2, [150, 200])
+        else:
+            if (x == foodx) and (y == foody):   #蛇が食べ物を食べったら
+                snake_lon += 1    #長さ+1
+                while (arr[foodx][foody] != 0):    #新しい食べ物を表示
+                    foodx = random.randint(1, 60)
+                    foody = random.randint(1, 40)
+                arr[foodx][foody] = -1
+                scor += 1 #スコアが+1
+            if round(gt%5) == 0: #五秒ごと経つと敵動く方向が変わる
+                print(gt)
+                vx = random.choice(xy)
+                vy = random.choice(xy)
+                teki_rct.move_ip(vx, vy)
+                scr.sfc.blit(teki_sfc, teki_rct)   
 
         pg.display.update()
-
+        clock.tick(1000)
 
 if __name__ == '__main__':
     pg.init()
