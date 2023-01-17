@@ -26,8 +26,20 @@ class Maze:
 
     def blit(self,scr:Screen):
         scr.sfc.blit(self.sfc,self.rct)
-                
+
+def check_bound(obj_rct, scr_rct):
+    # 第1引数；敵rect
+    # 第2引数：スクリーンrect
+    # 範囲内：+1/範囲外：-1
+    yoko, tate = +1, +1
+    if obj_rct.left < scr_rct.left or scr_rct.right < obj_rct.right:
+        yoko = -1
+    if obj_rct.top < scr_rct.top or scr_rct.bottom < obj_rct.bottom:
+        tate = -1
+    return yoko, tate
+
 def main2():
+    clock = pg.time.Clock()
     scr = Screen("食べろにょろにょろ", (1600,900), "fig/pg_bg.jpg")
 
     make_lst=mm.make_maze(18,18) #マスの数
@@ -113,7 +125,7 @@ def main2():
                 if event.type == pg.QUIT:
                     sys.exit()
         pg.display.update()
-
+        clock.tick(1000)
 
 if __name__ == '__main__':
     pg.init()
