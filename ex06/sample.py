@@ -17,7 +17,13 @@ def main():
     arr[foodx][foody] = -1
     snake_lon = 3  # 蛇の長さ
     way = 1  # 蛇の運動方向
-
+    fonto = pg.font.Font(None,80)
+    fonto2 = pg.font.Font(None,30)
+    appnum = 3 #りんごゲットのノルマ(坂本)
+    app = fonto2.render((f"APPLE:{appnum}"),True,(0,0,0)) #残りのりんごの獲得ノルマ表示(坂本)
+    clear = fonto.render("Game Clear",True,(0,0,255))#ゲームクリアの表示(坂本)
+    gover = fonto.render("Game Over",True,(255,0,0))#ゲームオーバーの表示(坂本)
+    game = True #ゲームが続いているかのフラグ(坂本)
     while True:
         screen.fill(color_white)
         time.sleep(0.1)
