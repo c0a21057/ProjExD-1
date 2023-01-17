@@ -29,7 +29,7 @@ class Maze:
         scr.sfc.blit(self.sfc,self.rct)
                 
 def main2():
-    scr = Screen("食べろにょろにょろ", (1600,900), "fig/pg_bg.jpg")
+    scr = Screen("食べろにょろにょろ", (900,1000), "fig/pg_bg.jpg")
 
     make_lst=mm.make_maze(18,18) #マスの数
     print (make_lst)
@@ -97,7 +97,6 @@ def main2():
                     if (d < 0):
                         pg.draw.rect(screen, color_red, ((a - 1) * 10, (c - 1) * 10, 10, 10))
             if (x == foodx) and (y == foody):   #蛇が食べ物を食べったら
-                snake_lon += 1    #長さ+1
                 appnum -= 1  #ノルマのりんごの数を1減らす(坂本)
                 app = fonto2.render((f"APPLE:{appnum}"),True,(0,0,0)) #残りのりんごの獲得ノルマ表示(坂本)
                 while (arr[foodx][foody] != 0):    #新しい食べ物を表示
